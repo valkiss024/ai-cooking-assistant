@@ -21,3 +21,10 @@ def generate_email_verification_token(user_email, user_id):
     token = jwt.encode(payload=payload, key=secret_key)  # Generate the token
 
     return token  # Return the token
+
+def create_response_object(status, message):
+    """Function to return a dictionary containing the status and message for the response object"""
+    return {
+        'Status': status,
+        'Message': message
+    }
