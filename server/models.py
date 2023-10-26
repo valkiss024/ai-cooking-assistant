@@ -8,18 +8,20 @@ class User(db.Model):
     The User model - defines a User object in the database
     """
     # noinspection SpellCheckingInspection
-    __tablename__ = 'users'
+    __tablename__ = 'user'
 
     # Define User table columns
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
     email = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
+    is_verified = db.Column(db.Boolean, nullable=False)
 
     def __init__(self, username, email):
         """Class constructor"""
         self.username = username
         self.email = email
+        self.is_verified = False
 
     def __repr__(self):
         """Object representation for debugging and read queries"""
@@ -32,3 +34,18 @@ class User(db.Model):
     def validate_password_hash(self, password):
         """Method to check if password hashes are matching used to validate user upon logging in"""
         return bcrypt.check_password_hash(pw_hash=self.password, password=password)
+
+
+class UserProfile(db.Model):
+    """
+    The User Profile model - defines a Profile object for users in the database
+    """
+    # noinspection SpellCheckingInspection
+    __tablename__ = 'user_profile'
+
+    # Define User Profile table columns
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(50), db.ForeignKey('user.username', ondelete='CASCADE'), nullable=False)
+    first_name = db.Column(db.String(80), nullable=False, unique=False)
+
+    # TODO: add columns to the user's profile (personal / dietary / ?)
