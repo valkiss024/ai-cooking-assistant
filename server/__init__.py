@@ -1,6 +1,6 @@
 from flask import Flask
 
-from server.extensions import db, bcrypt
+from server.extensions import db, bcrypt, limiter
 from server.routes import user_auth
 
 
@@ -17,11 +17,12 @@ def create_app(config_file='./settings.py'):
 
     db.init_app(server)  # Initialize the database extension for the application server
     with server.app_context():
-        # db.drop_all()  # Drop all existing tables in the database
+        db.drop_all()  # Drop all existing tables in the database
         db.create_all()  # Create tables if they don't yet exist
         db.session.commit()  # Commit changes
 
     bcrypt.init_app(server)  # Initialize the Bcrypt extension for the application server
+    limiter.init_app(server)  # Initialize the Flask-Limiter extension for the application server
 
     server.register_blueprint(user_auth)  # Register server blueprint for authentication endpoints
 

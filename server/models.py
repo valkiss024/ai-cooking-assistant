@@ -16,16 +16,23 @@ class User(db.Model):
     email = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
     is_verified = db.Column(db.Boolean, nullable=False)
+    failed_login_attempts = db.Column(db.Integer, nullable=False)
+    locked_until = db.Column(db.DateTime)
 
     def __init__(self, username, email):
         """Class constructor"""
         self.username = username
         self.email = email
         self.is_verified = False
+        self.failed_login_attempts = 0
+        self.locked_until = None
 
     def __repr__(self):
         """Object representation for debugging and read queries"""
         return f'User({self.username, self.email})'
+
+    def verify_user(self):
+        self.is_verified = True
 
     def create_password_hash(self, password):
         """Method to encrypt plaintext password provided by the user upon signing up"""
